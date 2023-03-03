@@ -10,7 +10,7 @@ public class Application {
         // Создаем соединение с базой с помощью Connection
         // Формируем запрос к базе с помощью PreparedStatement
         try (final Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee_1 WHERE  id = (?)")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE  id = (?)")) {
 
             // Подставляем значение вместо wildcard
             statement.setInt(1, 6);
@@ -26,7 +26,7 @@ public class Application {
                 String firstName = "FirstName: " + resultSet.getString("first_name");
                 String lastName = "LastName: " + resultSet.getString("last_name");
                 String gender = "Gender: " + resultSet.getString("gender");
-                int age = resultSet.getInt(25);
+                String age = resultSet.getString(5);
 
                 // Выводим данные в консоль
                 System.out.println(firstName);
@@ -34,7 +34,14 @@ public class Application {
                 System.out.println(gender);
                 System.out.println("Age: " + age);
             }
+            EmployeeDAO employeeDAO = new EmployeeDAOimpl(connection);
+            Employee employee = new Employee(1, "Olia","Kotova","woman",5,60);
+            City city = new City(1,"Москва");
+            employeeDAO.create(employee);
+
         }
+
+
 
     }
 }
