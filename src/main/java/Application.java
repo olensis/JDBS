@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.List;
 
 public class Application {
     public static void main(String[] args) throws SQLException {
@@ -7,8 +8,13 @@ public class Application {
         final String password = "2207ebs";
         final String url = "jdbc:postgresql://localhost:5432/skypro";
 
+
         // Создаем соединение с базой с помощью Connection
         // Формируем запрос к базе с помощью PreparedStatement
+        String firstName = null;
+        String lastName = null;
+        String gender = null;
+        int age = 0;
         try (final Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee_1 WHERE  id = (?)")) {
 
@@ -23,18 +29,32 @@ public class Application {
             while (resultSet.next()) {
 
                 // С помощью методов getInt и getString получаем данные из resultSet
-                String firstName = "FirstName: " + resultSet.getString("first_name");
-                String lastName = "LastName: " + resultSet.getString("last_name");
-                String gender = "Gender: " + resultSet.getString("gender");
-                int age = resultSet.getInt(25);
+                firstName = "FirstName: " + resultSet.getString("first_name");
+                lastName = "LastName: " + resultSet.getString("last_name");
+                gender = "Gender: " + resultSet.getString("gender");
+                age = resultSet.getInt(25);
+                EmployeeDAO employeeDAO = new EmployeeDAOimpl();
+                CityDAO cityDAO = new CityDAOImpl();
 
-                // Выводим данные в консоль
-                System.out.println(firstName);
-                System.out.println(lastName);
-                System.out.println(gender);
-                System.out.println("Age: " + age);
+                City moscow = cityDAO.read(4);
+
+                Employee employee = new Employee();
+                employee.setCity(moscow);
+                employee.setAge(30);
+                employee.setGender("pav");
+                employee.setFirst_name("er");
+                employee.setLast_name("av");
+
+                employeeDAO.create(employee);
+
+
             }
         }
 
+        // Выводим данные в консоль
+        System.out.println(firstName);
+        System.out.println(lastName);
+        System.out.println(gender);
+        System.out.println("Age: " + age);
     }
 }
